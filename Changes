@@ -3,8 +3,8 @@ Revision history for Alien-InteractiveBrokers
 Legend:
 BUG:    An actual found or reported bug fix.
 FIX:    Change toward correct behavior, but unreported.
-DOC:    Changes to documentation.
 NEW:    New, previously non-existent feature.
+DOC:    Changes to documentation.
 ------------------------------------------------------------
 
 9.64_01  2011-01-24     (developer release)

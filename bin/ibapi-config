@@ -21,7 +21,7 @@ use Alien::InteractiveBrokers;
 
 use vars qw( $VERSION $TRUE $FALSE $PROGNAME $PROGDESC );
 BEGIN {
-	$VERSION = '9.64_01';
+	$VERSION = '9.64_02';
 }
 
 *TRUE      = \1;
@@ -147,7 +147,7 @@ __END__
 
 =head1 NAME
 
-ibapi-config - Command-line config-listing script
+ibapi-config - Command-line InteractiveBrokers API configuration info utility
 
 =head1 USAGE
 
@@ -155,7 +155,7 @@ ibapi-config - Command-line config-listing script
 
 =head1 DESCRIPTION
 
-This script, as part of the L<Alien::InteractiveBrokers> distribution, is
+This tool, as part of the L<Alien::InteractiveBrokers> distribution, is
 for convenient printing of the installed IB API locations, for use in
 Makefiles, shell scripts, etc.
 
@@ -213,8 +213,8 @@ Jason McManus, C<< <infidel at cpan.org> >>
 =head1 BUGS
 
 Please report any bugs or feature requests to
-C<bug-poe-component-client-interactivebrokers at rt.cpan.org>, or through
-the web interface atL<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Alien-InteractiveBrokers>.  The authors will be notified, and then you'll
+C<bug-alien-interactivebrokers at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Alien-InteractiveBrokers>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
 
 =head1 SUPPORT

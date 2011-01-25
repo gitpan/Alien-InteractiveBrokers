@@ -12,29 +12,21 @@ use Carp qw( croak confess );
 use strict;
 use warnings;
 
-# Ours
-
 ###
 ### Variables
 ###
 
-use vars qw( @ISA @EXPORT_OK $VERSION $TRUE $FALSE $KEEP $DELETE $REQUIRED );
+use vars qw( @ISA @EXPORT_OK $VERSION $TRUE $FALSE );
 
 BEGIN {
     require Exporter;
     @ISA        = qw( Exporter );
     @EXPORT_OK  = qw( path includes classpath version );
-    $VERSION    = '9.64_01';
+    $VERSION    = '9.64_02';
 }
 
 *TRUE     = \1;
 *FALSE    = \0;
-*KEEP     = \0;
-*DELETE   = \1;
-*REQUIRED = \2;
-
-my %our_args = (
-);
 
 my $versions = {
     '9.64' => {
@@ -136,9 +128,11 @@ __END__
 
 =head1 NAME
 
-Alien::InteractiveBrokers - Provides installation and config information for IB API
+Alien::InteractiveBrokers - Provides installation and config information for the InteractiveBrokers API
 
 =head1 SYNOPSIS
+
+    use Alien::InteractiveBrokers;
 
     my $IBAPI     = Alien::InteractiveBrokers->new();
     my $path      = $IBAPI->path();
@@ -152,9 +146,11 @@ This module automates the installation of the InteractiveBrokers API files
 and source code, and provides accessor functions to describe its location,
 include paths, etc.
 
-It was developed in conjunction with Finance::InteractiveBrokers::SWIG
-and POE::Component::Client::InteractiveBrokers, as a way of simplifying
+It was developed in conjunction with L<Finance::InteractiveBrokers::SWIG>
+and L<POE::Component::Client::InteractiveBrokers>, as a way of simplifying
 distribution and installation of these needed files.
+
+Please see L<Alien> for an explanation of the Alien namespace.
 
 =head1 CONSTRUCTOR
 
@@ -162,11 +158,12 @@ distribution and installation of these needed files.
 
     my $IBAPI = Alien::InteractiveBrokers->new();
 
-B<ARGUMENTS:>
+Create a new Alien::InteractiveBrokers object for querying the installed
+configuration.
 
-None.
+B<ARGUMENTS:> None.
 
-B<RETURNS:> blessed I<$object>.
+B<RETURNS:> blessed C<$object>, or C<undef> on failure.
 
 =head1 METHODS
 
@@ -176,6 +173,8 @@ B<RETURNS:> blessed I<$object>.
 
 Get the base install path of the uncompressed IBJts directory.
 
+B<ARGUMENTS:> None.
+
 B<RETURNS:> Directory $name, with no trailing path separator.
 
 =head2 includes()
@@ -183,6 +182,8 @@ B<RETURNS:> Directory $name, with no trailing path separator.
     my $includes = $IBAPI->includes();
 
 Get the required -I include directives, for compiling against this library.
+
+B<ARGUMENTS:> None.
 
 B<RETURNS:> Complete list of -I paths, space-separated.
 
@@ -193,6 +194,8 @@ B<RETURNS:> Complete list of -I paths, space-separated.
 Get the Java CLASSPATH value for the jtsclient.jar file containing the
 compiled com.ib.client classes.
 
+B<ARGUMENTS:> None.
+
 B<RETURNS:> Full path to jtsclient.jar, ready for the environment.
 
 =head2 version()
@@ -201,8 +204,10 @@ B<RETURNS:> Full path to jtsclient.jar, ready for the environment.
 
 Get the version of the installed IB API.
 
-Not to be confused with L<Alien::InteractiveBrokers> $VERSION, which is
-the Perl wrapper's version number.
+(Not to be confused with L<Alien::InteractiveBrokers> B<$VERSION>, which is
+the Perl wrapper's version number.)
+
+B<ARGUMENTS:> None.
 
 B<RETURNS:> IB API version number, as read from $path/API_VersionNum.txt
 
@@ -250,13 +255,13 @@ Jason McManus, C<< <infidel at cpan.org> >>
 
 =head1 ACKNOWLEDGEMENTS
 
-Many of the build scripts in this module were based on L<Alien::IE7>.
+Many of the build scripts in this module were modelled on L<Alien::IE7>.
 
 =head1 BUGS
 
 Please report any bugs or feature requests to
-C<bug-poe-component-client-interactivebrokers at rt.cpan.org>, or through
-the web interface atL<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=POE-Component-Client-InteractiveBrokers>.  The authors will be notified, and then you'll
+C<bug-alien-interactivebrokers at rt.cpan.org>, or through
+the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Alien-InteractiveBrokers>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
 
 =head1 SUPPORT

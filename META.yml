@@ -1,5 +1,5 @@
 ---
-abstract: 'Provides installation and config information for IB API'
+abstract: 'Provides installation and config information for the InteractiveBrokers API'
 author:
   - 'Jason McManus <infidel AT cpan.org>'
 build_requires:
@@ -17,9 +17,9 @@ name: Alien-InteractiveBrokers
 provides:
   Alien::InteractiveBrokers:
     file: lib/Alien/InteractiveBrokers.pm
-    version: 9.64_01
+    version: 9.64_02
 requires:
   perl: v5.6.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 9.64_01
+version: 9.64_02
