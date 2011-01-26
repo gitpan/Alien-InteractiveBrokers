@@ -22,7 +22,7 @@ BEGIN {
     require Exporter;
     @ISA        = qw( Exporter );
     @EXPORT_OK  = qw( path includes classpath version );
-    $VERSION    = '9.64_02';
+    $VERSION    = '9.6403';
 }
 
 *TRUE     = \1;
@@ -152,6 +152,10 @@ distribution and installation of these needed files.
 
 Please see L<Alien> for an explanation of the Alien namespace.
 
+=head1 IB API VERSION
+
+This module can install or download InteractiveBrokers API version 9.64.
+
 =head1 CONSTRUCTOR
 
 =head2 new()
@@ -181,22 +185,22 @@ B<RETURNS:> Directory $name, with no trailing path separator.
 
     my $includes = $IBAPI->includes();
 
-Get the required -I include directives, for compiling against this library.
+Get the required C<-I> include directives, for compiling against this library.
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> Complete list of -I paths, space-separated.
+B<RETURNS:> Complete list of C<-I> paths, space-separated.
 
 =head2 classpath()
 
     my $classpath = $IBAPI->classpath();
 
-Get the Java CLASSPATH value for the jtsclient.jar file containing the
+Get the Java C<CLASSPATH> value for the F<jtsclient.jar> file containing the
 compiled com.ib.client classes.
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> Full path to jtsclient.jar, ready for the environment.
+B<RETURNS:> Full path to F<jtsclient.jar>, ready for the environment.
 
 =head2 version()
 
@@ -204,12 +208,12 @@ B<RETURNS:> Full path to jtsclient.jar, ready for the environment.
 
 Get the version of the installed IB API.
 
-(Not to be confused with L<Alien::InteractiveBrokers> B<$VERSION>, which is
+(Not to be confused with L<Alien::InteractiveBrokers> C<$VERSION>, which is
 the Perl wrapper's version number.)
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> IB API version number, as read from $path/API_VersionNum.txt
+B<RETURNS:> IB API version number, as read from C<$path>F</API_VersionNum.txt>
 
 =head1 EXPORTS
 

@@ -7,6 +7,14 @@ NEW:    New, previously non-existent feature.
 DOC:    Changes to documentation.
 ------------------------------------------------------------
 
+9.6403   2011-01-28
+         First production CPAN release for IB API 9.64
+         DOC: Minor documentation tweaks
+         FIX: Versioning scheme will change from here on.
+
+9.64_02  2011-01-25     (developer release)
+         DOC: Fixing documentation bugs seen on CPAN from 9.64_01
+
 9.64_01  2011-01-24     (developer release)
          Main module should be complete
          Prepped for releasing to CPAN for cpantesters feedback
