@@ -1,3 +1,4 @@
+use 5.006;
 use strict;
 use warnings;
 use lib qw( inc lib );
@@ -17,5 +18,3 @@ MY::Build->new(
         'HTTP::Tiny'            => 0,
     },
 )->create_build_script();
-
-print "Now type:\n\tmake\n\tmake test\n\tmake install\n\n";

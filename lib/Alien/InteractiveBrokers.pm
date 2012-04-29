@@ -2,12 +2,12 @@ package Alien::InteractiveBrokers;
 #
 #   Alien::InteractiveBrokers - Provides config info for IB API files
 #
-#   Copyright (c) 2010-2011 Jason McManus
+#   Copyright (c) 2010-2012 Jason McManus
 #
 #   Full POD documentation after __END__
 #
 
-use File::Spec qw( catfile );
+use File::Spec::Functions qw( catdir catfile );
 use Carp qw( croak confess );
 use strict;
 use warnings;
@@ -22,7 +22,7 @@ BEGIN {
     require Exporter;
     @ISA        = qw( Exporter );
     @EXPORT_OK  = qw( path includes classpath version );
-    $VERSION    = '9.6403';
+    $VERSION    = '9.6601';
 }
 
 *TRUE     = \1;
@@ -30,18 +30,29 @@ BEGIN {
 
 my $versions = {
     '9.64' => {
-        desc => 'Latest production release',
-        url  => 'http://www.interactivebrokers.com/download/twsapi_unixmac_964.j
-ar',
+        desc => 'IB API 9.64',
+        url  => 'http://www.interactivebrokers.com/download/twsapi_unixmac_964.jar',
     },
     '9.65' => {
-        desc => 'Beta release',
-        url  => 'http://www.interactivebrokers.com/download/twsapi_unixmac_965.j
-ar',
+        desc => 'IB API 9.65',
+        url  => 'http://www.interactivebrokers.com/download/twsapi_unixmac_965.jar',
+    },
+    '9.66' => {
+        desc => 'IB API 9.66',
+        url  => 'http://www.interactivebrokers.com/download/twsapi_unixmac_966.jar',
+    },
+    '9.65' => {
+        desc => 'IB API 9.67 Beta',
+        url  => 'http://www.interactivebrokers.com/download/twsapi_unixmac_967.jar',
     },
 };
 
-my $DEF_API_VERSION = '9.64';
+my $DEF_API_VERSION = '9.66';
+
+# Global cache; either points to object ref, or just used as is.
+# XXX: This may explode upon multiple Alien::SWIG objects being created,
+# but we'll worry about that if anyone ever needs to actually do that.
+our $CACHE = {};        # our, for testing
 
 ###
 ### Constructor
@@ -52,10 +63,13 @@ sub new
     my $class = shift;
 
     # Set up a default object
-    my $self = {};
+    my $self = {}; 
 
     # Instantiate the object.  sort of.
     bless( $self, $class );
+
+    # Direct the global cache to us (see note above)
+    $CACHE = $self;
 
     return( $self );
 }
@@ -66,46 +80,73 @@ sub new
 
 sub path
 {
-    my $base = $INC{'Alien/InteractiveBrokers.pm'};
+    return( $CACHE->{path} )
+        if( exists( $CACHE->{path} ) );
+
+    my $base = $INC{ catfile( 'Alien', 'InteractiveBrokers.pm' ) };
     $base =~ s{\.pm$}{};
-    my $path = File::Spec->catfile( $base, 'IBJts' );
+    my $path = catfile( $base, 'IBJts' );
 
     croak( "Path $path doesn't appear to contain the IB API installation;" .
            " please re-install Alien::InteractiveBrokers." )
         unless( -d $path );
+
+    $CACHE->{path} = $path;
 
     return( $path );
 }
 
 sub includes
 {
-    my $base = path();
-    my @includes = ();
-    for( qw( Shared PosixSocketClient ) )
+    my @includes;
+
+    if( exists( $CACHE->{includes} ) )
     {
-        my $incpath = File::Spec->catfile( $base, 'cpp', $_ );
-        croak( "Cannot find $_ include directory under $base; please" .
-               " re-install Alien::InteractiveBrokers" )
-            unless( -d $incpath );
-        push( @includes, '-I' . $incpath );
+        @includes = @{ $CACHE->{includes} };
     }
-    return( join( ' ', @includes ) );
+    else
+    {
+        my $base = path();
+
+        for( qw( Shared PosixSocketClient ) )
+        {
+            my $incpath = catfile( $base, 'cpp', $_ );
+            croak( "Cannot find $_ include directory under $base; please" .
+                   " re-install Alien::InteractiveBrokers" )
+                unless( -d $incpath );
+            push( @includes, '-I' . $incpath );
+        }
+
+        $CACHE->{includes} = \@includes;
+    }
+
+    return( wantarray
+              ? @includes
+              : join( ' ', @includes ) );
 }
 
 sub classpath
 {
-    my $jarfile = File::Spec->catfile( path(), 'jtsclient.jar' );
+    return( $CACHE->{classpath} )
+        if( exists( $CACHE->{classpath} ) );
+
+    my $jarfile = catfile( path(), 'jtsclient.jar' );
 
     croak( "Cannot find jtsclient.jar; please re-install" .
            " Alien::InteractiveBrokers." )
         unless( -f $jarfile );
+
+    $CACHE->{classpath} = $jarfile;
 
     return( $jarfile );
 }
 
 sub version
 {
-    my $verfile = File::Spec->catfile( path(), 'API_VersionNum.txt' );
+    return( $CACHE->{version} )
+        if( exists( $CACHE->{version} ) );
+
+    my $verfile = catfile( path(), 'API_VersionNum.txt' );
     open my $fd, '<', $verfile or
         croak( "Cannot read API version file; please re-install" .
                " Alien::InteractiveBrokers." );
@@ -116,6 +157,8 @@ sub version
     croak( "Could not read version number; please" .
            " reinstall Alien::InteractiveBrokers." )
         unless( defined( $vernum ) );
+
+    $CACHE->{version} = $vernum;
 
     return( $vernum );
 }
@@ -179,17 +222,21 @@ Get the base install path of the uncompressed IBJts directory.
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> Directory $name, with no trailing path separator.
+B<RETURNS:> Directory C<$name>, with no trailing path separator.
 
 =head2 includes()
 
+    # As string
     my $includes = $IBAPI->includes();
 
-Get the required C<-I> include directives, for compiling against this library.
+    # As list
+    my @includes = $IBAPI->includes();
+
+Get the required C<-I> include directives for compiling against this library.
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> Complete list of C<-I> paths, space-separated.
+B<RETURNS:> Depending on context, returns a C<$scalar> containing all the paths joined with spaces, as C<-I/path>, or an C<@array> containing all the paths, as C<-I/path>, one-per-element.
 
 =head2 classpath()
 
@@ -209,11 +256,11 @@ B<RETURNS:> Full path to F<jtsclient.jar>, ready for the environment.
 Get the version of the installed IB API.
 
 (Not to be confused with L<Alien::InteractiveBrokers> C<$VERSION>, which is
-the Perl wrapper's version number.)
+this Perl wrapper's version number.)
 
 B<ARGUMENTS:> None.
 
-B<RETURNS:> IB API version number, as read from C<$path>F</API_VersionNum.txt>
+B<RETURNS:> IB API version number, as read from C<$path/API_VersionNum.txt>
 
 =head1 EXPORTS
 
@@ -251,7 +298,7 @@ L<http://www.interactivebrokers.com/> - The InteractiveBrokers website
 
 L<http://www.interactivebrokers.com/php/apiUsersGuide/apiguide.htm> - The IB API documentation
 
-The examples/ directory of this module's distribution
+The F<examples/> directory of this module's distribution
 
 =head1 AUTHORS
 
@@ -267,6 +314,22 @@ Please report any bugs or feature requests to
 C<bug-alien-interactivebrokers at rt.cpan.org>, or through
 the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Alien-InteractiveBrokers>.  The authors will be notified, and then you'll
 automatically be notified of progress on your bug as changes are made.
+
+If you are sending a bug report, please include:
+
+=over 4
+
+=item * Your OS type, version, Perl version, and other similar information.
+
+=item * The version of Alien::InteractiveBrokers you are using.
+
+=item * The version of the InteractiveBrokers API you are using.
+
+=item * If possible, a minimal test script which demonstrates your problem.
+
+=back
+
+This will be of great assistance in troubleshooting your issue.
 
 =head1 SUPPORT
 
@@ -298,7 +361,7 @@ L<http://search.cpan.org/dist/Alien-InteractiveBrokers/>
 
 =head1 LICENSE AND COPYRIGHT
 
-Copyright (c) 2010-2011 Jason McManus
+Copyright (c) 2010-2012 Jason McManus
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of either: the GNU General Public License as published

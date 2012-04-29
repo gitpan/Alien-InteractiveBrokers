@@ -4,6 +4,7 @@ inc/MY/Build.pm
 lib/Alien/InteractiveBrokers.pm
 Makefile.PL
 MANIFEST
+LICENSE
 README
 bin/ibapi-config
 t/00-load.t
@@ -11,5 +12,5 @@ t/10-Alien-InteractiveBrokers.t
 t/manifest.t
 t/pod-coverage.t
 t/pod.t
-twsapi_unixmac_964.jar
+twsapi_unixmac_966.jar
 META.yml

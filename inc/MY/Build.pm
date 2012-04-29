@@ -2,7 +2,7 @@ package MY::Build;
 #
 #   Alien::InteractiveBrokers -- Installer to download or install IB API
 #
-#   Copyright (c) 2010-2011 Jason McManus
+#   Copyright (c) 2010-2012 Jason McManus
 #
 
 use base qw( Module::Build );
@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '9.6403';
+    $VERSION = '9.6601';
 }
 
 sub ACTION_code {
@@ -21,7 +21,7 @@ sub ACTION_code {
 }
 
 sub ibapi_archive {
-    return 'twsapi_unixmac_964.jar';
+    return 'twsapi_unixmac_966.jar';
 }
 
 sub ibapi_dir {
@@ -48,7 +48,7 @@ sub fetch_ibapi {
 
     # Grab the file
     require HTTP::Tiny;
-    my $http = HTTP::Tiny->new();
+    my $http = HTTP::Tiny->new( timeout => 30 );
     my $response = $http->get(
         $self->ibapi_url(),
         {
@@ -58,9 +58,19 @@ sub fetch_ibapi {
             }
         }
     );
-    die sprintf( "\nUnable to fetch archive: %s %s\n",
-                 $response->{status}, $response->{reason} )
-        unless( $response->{success} );
+
+    unless( $response->{success} )
+    {
+        my $content = ( exists( $response->{content} ) and
+                        defined( $response->{content} ) and
+                        length( $response->{content} ) )
+                          ? substr( $response->{content}, 0, 8*1024 )
+                          : "empty";
+        chomp $content;
+        die sprintf( "\nUnable to fetch archive: %s %s; Content was%s\n",
+                     $response->{status}, $response->{reason},
+                     ":\n'" . $content . "'\n" );
+    }
 
     # Write it to disk
     open my $fd, '>', $self->ibapi_archive()
@@ -93,7 +103,6 @@ sub install_ibapi {
         die "unable to extract IB API archive.\n";
     }
     print "OK\n";
-    print "\nNow type:\n\tmake test\n\tmake install\n\n";
 }
 
 1;
