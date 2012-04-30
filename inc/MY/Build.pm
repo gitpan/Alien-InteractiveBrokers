@@ -10,7 +10,7 @@ use strict;
 use warnings;
 use vars qw( $VERSION );
 BEGIN {
-    $VERSION = '9.6601';
+    $VERSION = '9.6602';
 }
 
 sub ACTION_code {

@@ -22,7 +22,7 @@ BEGIN {
     require Exporter;
     @ISA        = qw( Exporter );
     @EXPORT_OK  = qw( path includes classpath version );
-    $VERSION    = '9.6601';
+    $VERSION    = '9.6602';
 }
 
 *TRUE     = \1;
@@ -83,7 +83,7 @@ sub path
     return( $CACHE->{path} )
         if( exists( $CACHE->{path} ) );
 
-    my $base = $INC{ catfile( 'Alien', 'InteractiveBrokers.pm' ) };
+    my $base = $INC{ join( '/', 'Alien', 'InteractiveBrokers.pm' ) };
     $base =~ s{\.pm$}{};
     my $path = catfile( $base, 'IBJts' );
 
@@ -195,9 +195,23 @@ distribution and installation of these needed files.
 
 Please see L<Alien> for an explanation of the Alien namespace.
 
-=head1 IB API VERSION
+=head1 IB API VERSIONS
 
-This module can install or download InteractiveBrokers API version 9.64.
+This module can install (downloading if necessary) and provide an interface for the following InteractiveBrokers API versions:
+
+=over 4
+
+=item B<9.64>
+
+=item B<9.65>
+
+=item B<9.66>
+
+=item B<9.67>
+
+=back
+
+It currently comes bundled with IB API v9.66 (the latest production release).
 
 =head1 CONSTRUCTOR
 

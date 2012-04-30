@@ -9,6 +9,9 @@ API:    Change in user-facing API (hopefully rare).
 DOC:    Changes to documentation.
 ------------------------------------------------------------
 
+9.6602   2011-04-30
+         FIX: Fixed test path issue noticed under Strawberry Perl 5.14.2.0
+
 9.6601   2011-04-29
          NEW: Added support for IB API v9.66 - v9.67
          CHG: Default installed version is now IB API v9.66

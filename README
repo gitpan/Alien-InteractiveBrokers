@@ -8,14 +8,33 @@ It was developed in conjunction with Finance::InteractiveBrokers::SWIG
 and POE::Component::Client::InteractiveBrokers, as a way of simplifying
 distribution and installation of these needed files.
 
+API VERSION SUPPORT
+
+This module currently supports the following IneractiveBrokers API versions:
+    9.64
+    9.65 (beta)
+    9.66
+    9.67 (beta)
+
 INSTALLATION
 
 To install this module, run the following commands:
 
 	perl Makefile.PL
-	make
-	make test
-	make install
+	./Build
+	./Build test
+	./Build install
+
+BUILD NOTES
+
+If you get notices like the following (only noticed under Cygwin):
+
+    Build: blib/script/ibapi-config: cannot resolve L<POE> in paragraph 53.
+    Build: blib/lib/Alien/InteractiveBrokers.pm: cannot resolve L<Alien> in paragraph 48.
+    Build: blib/lib/Alien/InteractiveBrokers.pm: cannot resolve L<POE> in paragraph 94.
+
+Ignore them.  They are only warnings about cross-referencing documentation
+on the local machine, and they do not affect the actual build.
 
 SUPPORT AND DOCUMENTATION
 

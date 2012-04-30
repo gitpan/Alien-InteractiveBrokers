@@ -20,7 +20,7 @@ use Alien::InteractiveBrokers;
 
 use vars qw( $VERSION $TRUE $FALSE $PROGNAME $PROGDESC );
 BEGIN {
-	$VERSION = '9.6601';
+	$VERSION = '9.6602';
 }
 
 *TRUE      = \1;

@@ -17,9 +17,9 @@ name: Alien-InteractiveBrokers
 provides:
   Alien::InteractiveBrokers:
     file: lib/Alien/InteractiveBrokers.pm
-    version: 9.6601
+    version: 9.6602
 requires:
   perl: v5.6.0
 resources:
   license: http://dev.perl.org/licenses/
-version: 9.6601
+version: 9.6602

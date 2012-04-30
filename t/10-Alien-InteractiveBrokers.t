@@ -17,7 +17,7 @@ use warnings;
 
 use vars qw( $TRUE $FALSE $VERSION );
 BEGIN {
-    $VERSION = '9.6601';
+    $VERSION = '9.6602';
 }
 
 *TRUE      = \1;
@@ -47,7 +47,7 @@ is_deeply( $obj, {}, 'AIB cache: empty' );
 # Expected: PASS
 
 # Set up some junk
-my $aib_path = $INC{ catfile( 'Alien', 'InteractiveBrokers.pm' ) };
+my $aib_path = $INC{ join( '/', 'Alien', 'InteractiveBrokers.pm' ) };
 $aib_path    =~ s{\.pm$}{};
 my $aib_base = catdir( $aib_path, 'IBJts' );
 
